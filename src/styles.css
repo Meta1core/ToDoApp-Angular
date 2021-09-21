@@ -1,1 +1,29 @@
 /* You can add global styles to this file, and also import other style files */
+
+@import "~@angular/material/prebuilt-themes/indigo-pink.css";
+html, body {
+    height: 100%;
+    /* background-color: rgb(230, 201, 199); */
+    background-color: rgb(240, 209, 207);
+}
+
+body {
+    margin: 0;
+    font-family: Roboto, "Helvetica Neue", sans-serif;
+}
+
+nav {
+    background-color: rgb(78, 92, 92);
+}
+
+button.mat-mini-fab {
+    background-color: rgb(78, 92, 92) !important;
+}
+
+button.mat-fab {
+    background-color: rgb(78, 92, 92) !important;
+}
+
+.mat-tab-group.mat-primary .mat-ink-bar, .mat-tab-nav-bar.mat-primary .mat-ink-bar {
+    background-color: rgb(78, 92, 92) !important;
+}

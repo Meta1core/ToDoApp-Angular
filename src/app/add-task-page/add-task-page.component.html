@@ -1,0 +1,32 @@
+<mat-card>
+    <h3>Add a new task!</h3>
+    <form class="example-form" [formGroup]="form" (ngSubmit)="onSubmit()">
+        <mat-form-field class="example-full-width">
+            <mat-label>Time</mat-label>
+            <input [(ngModel)]="task.dateOfTask" name="dateOfTask" [ngModelOptions]="{standalone: true}" matInput
+                type="datetime-local">
+        </mat-form-field>
+        <mat-form-field class="example-full-width">
+            <mat-label>Header</mat-label>
+            <input [(ngModel)]="task.header" name="header" formControlName="header" required minlength="3"
+                maxlength="20" matInput placeholder="Header of the task">
+        </mat-form-field>
+        <mat-form-field class="example-full-width">
+            <mat-label>Description</mat-label>
+            <input [(ngModel)]="task.description" name="description" formControlName="description" required
+                minlength="4" maxlength="60" matInput placeholder="Description of the task">
+        </mat-form-field>
+        <mat-form-field class="example-full-width">
+            <mat-label>Directories</mat-label>
+            <mat-select [ngModelOptions]="{standalone: true}" [(ngModel)]="task.directory_Id" name="directory_Id"
+                (selectionChange)="selectDirectory($event.value)">
+                <mat-option value="0">Without directory</mat-option>
+                <mat-option *ngFor="let directory of directoriesList" [value]="directory.id">
+                    {{directory.directoryName}}
+                </mat-option>
+                <mat-option (click)="openDialog()">Add a new directory</mat-option>
+            </mat-select>
+        </mat-form-field>
+        <button [disabled]="!form.valid" mat-raised-button color="primary" type="submit">Submit</button>
+    </form>
+</mat-card>

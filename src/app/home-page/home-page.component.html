@@ -1,0 +1,170 @@
+<mat-tab-group mat-align-tabs="center">
+    <mat-tab label="All tasks">
+        <div class="main-div">
+            <mat-card *ngFor="let task of allTasks" class="example-card">
+                <mat-card-subtitle>
+                    <div *ngIf="task.isOverdue == true;then content else other_content"></div>
+                    <ng-template #content>{{task.dateOfTask |
+                        date:'medium'}}<span class="badge badge-pill badge-danger">Overdue</span>
+                    </ng-template>
+                    <ng-template #other_content>
+                        {{task.dateOfTask | date:'medium'}}
+                    </ng-template>
+                    <ng-container *ngIf="task.isDone == true">
+                        <span class="badge badge-pill badge-success">Done</span>
+                    </ng-container>
+                    <ng-container *ngIf="task.isDone == false && task.isOverdue == false">
+                        <span class="badge badge-pill badge-primary">Active</span>
+                    </ng-container>
+                    <ng-container *ngIf="task.directory != null">
+                        <span class="badge badge-pill badge-warning">
+                            {{task.directory.directoryName}}
+                        </span>
+                    </ng-container>
+                </mat-card-subtitle>
+                <mat-card-title>{{task.header}}</mat-card-title>
+                <mat-card-content>
+                    {{task.description}}
+                </mat-card-content>
+                <mat-divider inset></mat-divider>
+                <mat-card-actions class="mat-actions">
+                    <button mat-button [routerLink]="['edit/', task.id]">Edit</button>
+                    <button mat-button [disabled]="!isDeleteRequestExecuted"
+                        (click)="deleteTask(task.header, task.id)">Delete</button>
+                    <mat-checkbox (change)="completeTask(task)" [disabled]="task.isDone || task.isOverdue"
+                        [checked]="task.isDone" class="mat-checkbox"></mat-checkbox>
+                    <button [disabled]="!isFavoriteRequestExecuted"
+                        (click)="moveToFavorite(task.isFavorite, task,'all')" mat-icon-button>
+                        <mat-icon *ngIf="task.isFavorite == false">favorite_border</mat-icon>
+                        <mat-icon *ngIf="task.isFavorite == true">favorite</mat-icon>
+                    </button>
+                </mat-card-actions>
+                <mat-card-footer>
+                    <mat-progress-bar *ngIf="task.isOverdue != true && task.isDone != true" mode="indeterminate">
+                    </mat-progress-bar>
+                    <mat-progress-bar *ngIf="task.isOverdue == true" color="warn" mode="determinate" value="100"
+                        mode="buffer"></mat-progress-bar>
+                    <mat-progress-bar class="done" *ngIf="task.isDone == true" mode="determinate" value="100"
+                        mode="buffer"></mat-progress-bar>
+                </mat-card-footer>
+            </mat-card>
+            <button (click)="goToAddPage()" mat-fab color="primary">
+                <mat-icon>post_add</mat-icon>
+            </button>
+        </div>
+    </mat-tab>
+    <mat-tab label="Overdue tasks">
+        <div class="main-div">
+            <mat-card *ngFor="let task of overdueTasks" class="example-card">
+                <mat-card-subtitle>
+                    {{task.dateOfTask | date:'medium'}}
+                    <ng-container *ngIf="task.directory != null">
+                        <span class="badge badge-pill badge-warning">{{task.directory.directoryName}}</span>
+                    </ng-container>
+                </mat-card-subtitle>
+                <mat-card-title>{{task.header}}</mat-card-title>
+                <mat-card-content>
+                    {{task.description}}
+                </mat-card-content>
+                <mat-divider inset></mat-divider>
+                <mat-card-actions class="mat-actions">
+                    <button mat-button [routerLink]="['edit/', task.id]">Edit</button>
+                    <button mat-button [disabled]="!isDeleteRequestExecuted"
+                        (click)="deleteTask(task.header, task.id)">Delete</button>
+                    <mat-checkbox (change)="completeTask(task)" disabled="true" [hidden]="!isDoneRequestExecuted"
+                        [checked]="task.isDone" class="mat-checkbox">
+                    </mat-checkbox>
+                    <button [disabled]="!isFavoriteRequestExecuted"
+                        (click)="moveToFavorite(task.isFavorite, task, 'overdue')" mat-icon-button>
+                        <mat-icon *ngIf="task.isFavorite == false">favorite_border</mat-icon>
+                        <mat-icon *ngIf="task.isFavorite == true">favorite</mat-icon>
+                    </button>
+                </mat-card-actions>
+                <mat-card-footer>
+                    <mat-progress-bar color="warn" mode="determinate" value="100" mode="buffer"></mat-progress-bar>
+                </mat-card-footer>
+            </mat-card>
+        </div>
+    </mat-tab>
+    <mat-tab label="Completed tasks">
+        <div class="main-div">
+            <mat-card *ngFor="let task of completedTasks" class="example-card">
+                <mat-card-subtitle>
+                    {{task.dateOfTask | date:'medium'}}
+                    <ng-container *ngIf="task.directory != null">
+                        <span class="badge badge-pill badge-warning">{{task.directory.directoryName}}</span>
+                    </ng-container>
+                </mat-card-subtitle>
+                <mat-card-title>{{task.header}}</mat-card-title>
+                <mat-card-content>
+                    {{task.description}}
+                </mat-card-content>
+                <mat-divider inset></mat-divider>
+                <mat-card-actions class="mat-actions">
+                    <button mat-button [routerLink]="['edit/', task.id]">Edit</button>
+                    <button mat-button [disabled]="!isDeleteRequestExecuted"
+                        (click)="deleteTask(task.header, task.id)">Delete</button>
+                    <mat-checkbox (change)="completeTask(task)" [disabled]="task.isDone == true"
+                        [hidden]="!isDoneRequestExecuted" [checked]="task.isDone" class="mat-checkbox">
+                    </mat-checkbox>
+                    <button [disabled]="!isFavoriteRequestExecuted"
+                        (click)="moveToFavorite(task.isFavorite, task, 'completed')" mat-icon-button>
+                        <mat-icon *ngIf="task.isFavorite == false">favorite_border</mat-icon>
+                        <mat-icon *ngIf="task.isFavorite == true">favorite</mat-icon>
+                    </button>
+                </mat-card-actions>
+                <mat-card-footer>
+                    <mat-progress-bar class="done" mode="determinate" value="100" mode="buffer"></mat-progress-bar>
+                </mat-card-footer>
+            </mat-card>
+        </div>
+    </mat-tab>
+    <mat-tab label="Favorite tasks">
+        <div class="main-div">
+            <mat-card *ngFor="let task of favoriteTasks" class="example-card">
+                <mat-card-subtitle>
+                    <div *ngIf="task.isOverdue == true;then content else other_content"></div>
+                    <ng-template #content>{{task.dateOfTask |
+                        date:'medium'}}<span class="badge badge-pill badge-danger">Overdue</span>
+                    </ng-template>
+                    <ng-template #other_content>
+                        {{task.dateOfTask | date:'medium'}}
+                    </ng-template>
+                    <ng-container *ngIf="task.isDone == true">
+                        <span class="badge badge-pill badge-success">Done</span>
+                    </ng-container>
+                    <ng-container *ngIf="task.isDone == false && task.isOverdue == false">
+                        <span class="badge badge-pill badge-primary">Active</span>
+                    </ng-container>
+                    <ng-container *ngIf="task.directory != null">
+                        <span class="badge badge-pill badge-warning">
+                            {{task.directory.directoryName}}
+                        </span>
+                    </ng-container>
+                </mat-card-subtitle>
+                <mat-card-title>{{task.header}}</mat-card-title>
+                <mat-card-content>
+                    {{task.description}}
+                </mat-card-content>
+                <mat-divider inset></mat-divider>
+                <mat-card-actions class="mat-actions">
+                    <button mat-button [routerLink]="['edit/', task.id]">Edit</button>
+                    <button mat-button [disabled]="!isDeleteRequestExecuted"
+                        (click)="deleteTask(task.header, task.id)">Delete</button>
+                    <mat-checkbox (change)="completeTask(task)" [disabled]="task.isDone || task.isOverdue"
+                        [hidden]="!isDoneRequestExecuted" [checked]="task.isDone" class="mat-checkbox">
+                    </mat-checkbox>
+                    <button [disabled]="!isFavoriteRequestExecuted"
+                        (click)="moveToFavorite(task.isFavorite, task, 'favorite')" mat-icon-button>
+                        <mat-icon *ngIf="task.isFavorite == false">favorite_border</mat-icon>
+                        <mat-icon *ngIf="task.isFavorite == true">favorite</mat-icon>
+                    </button>
+                </mat-card-actions>
+                <mat-card-footer>
+                    <mat-progress-bar class="favorite" mode="determinate" color="warn" value="100" mode="buffer">
+                    </mat-progress-bar>
+                </mat-card-footer>
+            </mat-card>
+        </div>
+    </mat-tab>
+</mat-tab-group>

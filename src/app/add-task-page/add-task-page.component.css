@@ -1,0 +1,29 @@
+mat-card {
+    width: 300px;
+    height: 390px;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 15px;
+    vertical-align: middle;
+}
+
+h3 {
+    text-align: center;
+}
+
+mat-form-field {
+    display: flex;
+}
+
+.example-full-width {
+    margin: auto;
+    width: 65%;
+    padding: 0px;
+}
+
+button {
+    width: 65%;
+    margin-left: 50px;
+    padding: 5px;
+}
