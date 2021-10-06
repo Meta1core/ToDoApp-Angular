@@ -2,6 +2,7 @@ import { HttpHeaders } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { Observable } from 'rxjs';
 import { AuthService } from '../_services/auth.service';
+import { SignalRService } from '../_services/signal-r.service';
 import { TokenStorageService } from '../_services/token-storage.service';
 
 @Component({
@@ -19,7 +20,7 @@ export class LoginPageComponent implements OnInit {
   isLoginFailed = false;
   errorMessage = '';
 
-  constructor(private authService: AuthService, private tokenStorage: TokenStorageService) {
+  constructor(private signalR : SignalRService, private authService: AuthService, private tokenStorage: TokenStorageService) {
   }
 
   ngOnInit(): void {
@@ -38,6 +39,7 @@ export class LoginPageComponent implements OnInit {
 
         this.isLoginFailed = false;
         this.isLoggedIn = true;
+        this.signalR.startConnection();
         this.reloadPage();
       },
       err => {

@@ -3,7 +3,7 @@ import { HttpClient, HttpHeaders, JsonpClientBackend } from '@angular/common/htt
 import { Observable } from 'rxjs';
 import { TokenStorageService } from './token-storage.service';
 
-const API = 'https://localhost:44370/';
+const API = 'http://10.190.101.110:8080/';
 
 @Injectable({
   providedIn: 'root'

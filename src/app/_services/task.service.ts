@@ -7,7 +7,7 @@ import { Task } from '../model/Task';
 import { timer } from 'rxjs';
 import { mergeMap } from 'rxjs/operators';
 
-const API = 'https://localhost:44370/api/';
+const API = 'http://10.190.101.110:8080/api/';
 
 @Injectable({
   providedIn: 'root'

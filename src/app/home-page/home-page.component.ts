@@ -7,30 +7,24 @@ import { Task } from '../model/Task';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { FormControl } from '@angular/forms';
 import { BehaviorSubject, Observable, of, from } from 'rxjs';
+import { SignalRService } from '../_services/signal-r.service';
 
 declare var $: any;
-
 @Component({
   selector: 'app-home-page',
   templateUrl: './home-page.component.html',
   styleUrls: ['./home-page.component.css']
 })
 export class HomePageComponent implements OnInit {
-
-  constructor(private tokenStorage: TokenStorageService, private changeDetection: ChangeDetectorRef, private router: Router, private location: Location, private taskService: TaskService, private snackBar: MatSnackBar) {
-    const signalRServerEndPoint = 'https://localhost:44370/';
-
-    this.connection = $.hubConnection(signalRServerEndPoint);
-
-    this.proxy = this.connection.createHubProxy('taskHub');
-    this.proxy.on('sendNotification', (serverMessage) => this.refresh());
-
-    this.connection.start().done((data: any) => {
-      console.log('Connected to Notification Hub');
-    }).catch((error: any) => {
-      console.log('Notification Hub error -> ' + error);
+  proxy : any;
+  constructor(private tokenStorage: TokenStorageService,private signalR : SignalRService , private changeDetection: ChangeDetectorRef, private router: Router, private location: Location, private taskService: TaskService, private snackBar: MatSnackBar) {
+    this.proxy = this.signalR.getProxy();
+    this.proxy.on('sendNotification', (serverMessage) => {
+      this.getUserTasks();
+      this.getCompletedTasks();
+      this.getFavoriteTasks();
     });
-
+    
     if (this.tokenStorage.getToken()) {
       this.isLoggedIn = true;
       this.username = this.tokenStorage.getUser().userName;
@@ -57,7 +51,6 @@ export class HomePageComponent implements OnInit {
   intervalOverdue: any;
 
   connection: any;
-  proxy: any;
 
   isFavoriteRequestExecuted = true;
   isDeleteRequestExecuted = true;
@@ -66,6 +59,7 @@ export class HomePageComponent implements OnInit {
 
   ngOnInit(): void {
     this.refresh();
+
     this.interval = setInterval(() => {
       this.refresh();
     }, 60000);
@@ -83,6 +77,7 @@ export class HomePageComponent implements OnInit {
       data => {
         this.allTasks = data;
         this.changeDetection.detectChanges();
+        this.changeDetection.checkNoChanges();
         console.log(this.allTasks);
       },
       err => {
@@ -94,10 +89,12 @@ export class HomePageComponent implements OnInit {
       data => {
         this.overdueTasks = data;
         this.changeDetection.detectChanges();
+        this.changeDetection.checkNoChanges();
       },
       err => {
         console.log("oops", err);
       });
+      
   }
 
   getCompletedTasks() {
@@ -105,6 +102,7 @@ export class HomePageComponent implements OnInit {
       data => {
         this.completedTasks = data;
         this.changeDetection.detectChanges();
+        this.changeDetection.checkNoChanges();
       },
       err => {
         console.log("oops", err);
