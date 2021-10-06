@@ -2,6 +2,9 @@
 
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 12.2.4.
 
+http://10.190.101.110/todoapp
+
+OR IF YOU WANT TO INSTALL THIS APP:
 ## Development server
 Install latest version Node JS - https://nodejs.org/en/
 
