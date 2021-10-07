@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, OnDestroy, ChangeDetectorRef, NgZone } from '@angular/core';
 import { Router } from '@angular/router';
 import { Location } from '@angular/common';
 import { TokenStorageService } from '../_services/token-storage.service';
@@ -16,15 +16,16 @@ declare var $: any;
   styleUrls: ['./home-page.component.css']
 })
 export class HomePageComponent implements OnInit {
-  proxy : any;
-  constructor(private tokenStorage: TokenStorageService,private signalR : SignalRService , private changeDetection: ChangeDetectorRef, private router: Router, private location: Location, private taskService: TaskService, private snackBar: MatSnackBar) {
+  proxy: any;
+  constructor(private tokenStorage: TokenStorageService, private _ngZone: NgZone, private signalR: SignalRService, private changeDetection: ChangeDetectorRef, private router: Router, private location: Location, private taskService: TaskService, private snackBar: MatSnackBar) {
+
     this.proxy = this.signalR.getProxy();
     this.proxy.on('sendNotification', (serverMessage) => {
       this.getUserTasks();
       this.getCompletedTasks();
       this.getFavoriteTasks();
     });
-    
+
     if (this.tokenStorage.getToken()) {
       this.isLoggedIn = true;
       this.username = this.tokenStorage.getUser().userName;
@@ -35,7 +36,6 @@ export class HomePageComponent implements OnInit {
     }
   }
   mode = new FormControl('over');
-
 
   task: Task = new Task("", "", null, 0);
   isLoggedIn = false;
@@ -71,6 +71,7 @@ export class HomePageComponent implements OnInit {
     this.getUserTasks();
     this.getCompletedTasks();
     this.getFavoriteTasks();
+    this.getOverdueTasks();
   }
   getUserTasks() {
     this.taskService.getUserTasks().subscribe(
@@ -78,7 +79,6 @@ export class HomePageComponent implements OnInit {
         this.allTasks = data;
         this.changeDetection.detectChanges();
         this.changeDetection.checkNoChanges();
-        console.log(this.allTasks);
       },
       err => {
         console.log("oops", err);
@@ -94,7 +94,7 @@ export class HomePageComponent implements OnInit {
       err => {
         console.log("oops", err);
       });
-      
+
   }
 
   getCompletedTasks() {
@@ -153,8 +153,8 @@ export class HomePageComponent implements OnInit {
     this.taskService.updateTask(task).subscribe(
       data => {
         console.log(data);
-        this.isFavoriteRequestExecuted = true;
         this.refresh();
+        this.isFavoriteRequestExecuted = true;
         this.openSnackBar("Selected task has been updated", "Confirm")
       },
       err => {
@@ -167,8 +167,6 @@ export class HomePageComponent implements OnInit {
     if (index == -1) {
       index = favindex;
     }
-    console.log(favindex, 'auf');
-    console.log(index, 'auf');
     if (task.isOverdue == true) {
       this.openSnackBar("You cant mark overdue task like a completed", "Confirm");
       this.allTasks[index].isDone = false;
@@ -201,13 +199,11 @@ export class HomePageComponent implements OnInit {
     }
   }
   openSnackBar(message: string, action: string) {
-    this.snackBar.open(message, action);
+    this.snackBar.open(message, action, { duration: 800 });
   }
-
-  public broadcastMessage(): void {
-    this.proxy.invoke('FromClient', 'message from client')
-      .catch((error: any) => {
-        console.log('broadcastMessage error -> ' + error);
+  openEditPage(taskId){
+    this._ngZone.run(()=>{
+      this.router.navigate(['tasks/edit/', taskId]);
       });
   }
 }

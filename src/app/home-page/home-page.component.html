@@ -28,7 +28,7 @@
                 </mat-card-content>
                 <mat-divider inset></mat-divider>
                 <mat-card-actions class="mat-actions">
-                    <button mat-button [routerLink]="['edit/', task.id]">Edit</button>
+                    <button mat-button (click) = "openEditPage(task.id)">Edit</button>
                     <button mat-button [disabled]="!isDeleteRequestExecuted"
                         (click)="deleteTask(task.header, task.id)">Delete</button>
                     <mat-checkbox (change)="completeTask(task)" [disabled]="task.isDone || task.isOverdue"
@@ -68,7 +68,7 @@
                 </mat-card-content>
                 <mat-divider inset></mat-divider>
                 <mat-card-actions class="mat-actions">
-                    <button mat-button [routerLink]="['edit/', task.id]">Edit</button>
+                    <button mat-button (click) = "openEditPage(task.id)">Edit</button>
                     <button mat-button [disabled]="!isDeleteRequestExecuted"
                         (click)="deleteTask(task.header, task.id)">Delete</button>
                     <mat-checkbox (change)="completeTask(task)" disabled="true" [hidden]="!isDoneRequestExecuted"
@@ -101,7 +101,7 @@
                 </mat-card-content>
                 <mat-divider inset></mat-divider>
                 <mat-card-actions class="mat-actions">
-                    <button mat-button [routerLink]="['edit/', task.id]">Edit</button>
+                    <button mat-button (click) = "openEditPage(task.id)">Edit</button>
                     <button mat-button [disabled]="!isDeleteRequestExecuted"
                         (click)="deleteTask(task.header, task.id)">Delete</button>
                     <mat-checkbox (change)="completeTask(task)" [disabled]="task.isDone == true"
@@ -148,7 +148,7 @@
                 </mat-card-content>
                 <mat-divider inset></mat-divider>
                 <mat-card-actions class="mat-actions">
-                    <button mat-button [routerLink]="['edit/', task.id]">Edit</button>
+                    <button mat-button (click) = "openEditPage(task.id)">Edit</button>
                     <button mat-button [disabled]="!isDeleteRequestExecuted"
                         (click)="deleteTask(task.header, task.id)">Delete</button>
                     <mat-checkbox (change)="completeTask(task)" [disabled]="task.isDone || task.isOverdue"

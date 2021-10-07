@@ -68,7 +68,7 @@ import { MatSidenavModule } from '@angular/material/sidenav';
     MatExpansionModule,
     MatListModule
   ],
-  providers: [authInterceptorProviders, MatDatepickerModule, MatNativeDateModule ],
+  providers: [authInterceptorProviders, MatDatepickerModule, MatNativeDateModule],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

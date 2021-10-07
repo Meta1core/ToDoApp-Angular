@@ -13,7 +13,6 @@ export class SignalRService {
   constructor () {
     this.startConnection();
     this.proxy.on('sendNotification', (serverMessage) => {
-      console.log('ddddddd');
     });
   }
   public startConnection = () => {
